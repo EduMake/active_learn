@@ -1,0 +1,65 @@
+
+.invalid{ 
+    color:red;
+}
+
+.sumcorrect{ 
+    background-color:#DFD;
+}
+
+.sumincorrect{ 
+    background-color:#FDD;
+}
+
+td.sumincorrectcell{ 
+    background-color:#FDD !important;
+}
+
+.sumwarning{ 
+    background-color:#FFD;
+}
+
+.sumcolumns>td, .sumcolumns>th { 
+    min-width:2em;
+}
+
+.sumbinary { 
+    text-align:center; 
+    border-width:1px;
+}
+
+.sumline1, .sumline2 {
+    background-color:#FFF;
+}
+
+.sumresult>td{ 
+    background-color:#DDD;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.sumcarry>td{ 
+    color:#AAA;
+    background-color:#F9F9F9;
+    
+}
+
+
+.sumhighlight {
+    border-color: orange;
+    border-style: solid;
+    border-width: 2px;
+}
+
+.printsumline1>td{
+    width:2em;
+}
+
+.printsumresult>td, .printsumcarry>td{
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-top-color: black;
+    
+}
+
+
