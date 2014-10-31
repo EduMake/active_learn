@@ -54,6 +54,7 @@ $( document ).ready(function() {
         );
     }
     
+    
     var defaultStatement = {
         actor: {
             mbox: ""
@@ -75,7 +76,9 @@ $( document ).ready(function() {
     };
     
     
-        
+    if(localStorage.getItem("tincan_mbox")){
+        defaultStatement.actor.mbox = localStorage.getItem("tincan_mbox");
+    }    
         
     if(defaultStatement.actor.mbox.length) {
         tincan.sendStatement(defaultStatement);

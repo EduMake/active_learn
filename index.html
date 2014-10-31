@@ -1,0 +1,30 @@
+<html>
+<head>
+
+</head>
+<body>
+ <label for="tincanemail">School Email Address</label> <input type="email" id="tincanemail" />
+ <button id="save">Save</button>
+
+ <script>
+
+// Get the text field that we're going to track
+ var field = document.getElementById("tincanemail");
+ 
+ // See if we have an tincan_mbox value
+ // (this will only happen if the page is accidentally refreshed)
+ if (localStorage.getItem("tincan_mbox")) {
+    // Restore the contents of the text field
+    field.value = localStorage.getItem("tincan_mbox");
+ }
+ 
+ // Listen for changes in the text field
+ field.addEventListener("change", function() {
+    // And save the results into the session storage object
+    localStorage.setItem("tincan_mbox", field.value);
+    console.log("field.value =", field.value);
+ });
+ 
+</script>
+</body>
+</html>
