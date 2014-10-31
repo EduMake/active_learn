@@ -1,6 +1,5 @@
 var oQuiz;
 
-
 function logBinary(label, bin) {
     var sB = bin.toString(2);
     var sBin = ("00000000"+sB).slice(-8);
@@ -40,7 +39,7 @@ $( document ).ready(function() {
     
     // TODO : save progress locally and enable reloading
     // TODO : Add Teacher feedback message (email / scorm / TinCan or server message)
-    // TODO : TinCan in progress
+    // DONE : TinCan in progress
     // TODO : Tidy up and more jQuery it
     // TODO : Integrate with other question types
     // TODO : test on the MS surfaces
@@ -92,6 +91,14 @@ $( document ).ready(function() {
         iAttempts:0,
         type:"none",
         aScorers:[
+            {
+                name:"default",
+                weight:1,
+                exam:1,
+                getScore:function(oQ) {
+                    return 1;
+                }
+            }
         ],
     
         make:function(){
@@ -238,8 +245,6 @@ $( document ).ready(function() {
         iCurrentScore:0,
         iCurrentMin:2,
         iCurrentMax:5,
-        /*iCurrentMin:28,
-        iCurrentMax:32,*/
         
         iMinDifficulty: 2,
         iMaxDifficulty: 200,
