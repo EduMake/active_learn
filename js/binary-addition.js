@@ -7,52 +7,35 @@ function logBinary(label, bin) {
     return sBin;
 }
     
-function bitCount(b)
-{
+function bitCount(b) {
     var sB = b.toString(2);
     var re = /1/g;    
     var xRes = sB.match(re);
-    if($.isArray(xRes))
-    {
+    if($.isArray(xRes)) {
         return xRes.length;
     }
     return 0;
 }
 
-
 $( document ).ready(function() {
-    // TODO : add is 8 bit overflow tick box
+    // IDEA : Add alternative input method (text box with letter spacing and RTL)
+    // IDEA : Keyboard Event lisenters for 0,1,c (carry), ENTER (subtle cursor )
     
-    // TODO : Refactor all the checking etc. into the question, oQuiz just displays it.
-    // TODO : Add alternative input method (text box with letter spacing and RTL)
-    // TODO : Event lisenters for 0,1,c (carry), ENTER (subtle cursor )
-    // TODO : Mark the carrying as well and give extramarks for that (we are looking at these in the hinting so far)
-    
-    // TODO : Add marks and stats to oQuiz
-    // DEBUG : Display Running stats (score)
-    
-    // DONE : Add finish page
-    
-    // TODO : Add exam mark scheme to questions and score on that.
-    // DONE : Add print out homework (which prints each oth the questions as an exam layout question)
-    
-    
-    // TODO : save progress locally and enable reloading
+    // TODO : TinCan it
+    // TODO : Refactor all the checking etc. into the question type with, oQuiz just displays it.    
     // TODO : Add Teacher feedback message (email / scorm / TinCan or server message)
-    // DONE : TinCan in progress
     // TODO : Tidy up and more jQuery it
-    // TODO : Integrate with other question types
+    // TODO : Integrate other question types
     // TODO : test on the MS surfaces
+    
     var tincan = false;
-    if (TinCanRecordStores.length)
-    {
+    if (TinCanRecordStores.length) {
         tincan = new TinCan (
             {
                 recordStores: TinCanRecordStores
             }
         );
     }
-    
     
     var defaultStatement = {
         actor: {
@@ -73,9 +56,9 @@ $( document ).ready(function() {
             }
         }
     };
+    //  https://utc-sheffield.github.io/tincan_curriculum/OCR_GCSE_Computing_2012/#2-1-4-D
     
-    
-    if(localStorage.getItem("tincan_mbox")){
+    if(localStorage.getItem("tincan_mbox")) {
         defaultStatement.actor.mbox = localStorage.getItem("tincan_mbox");
     }    
         
@@ -101,11 +84,6 @@ $( document ).ready(function() {
             }
         ],
     
-        make:function(){
-            this.iLine1 = Math.round(Math.random()*255);
-            this.iLine2 = Math.round(Math.random()*255);
-            
-        },
         calcValue:function(){
             var aScores = this.aScorers.map(function(oScorer){
                     return oScorer.getScore(this) * oScorer.weight;
@@ -118,14 +96,18 @@ $( document ).ready(function() {
             return iValue;
         },
         
+        make:function(){
+            this.iLine1 = 0;
+            this.iLine2 = 0;    
+        },
+        
         genDetails:function(iPos){
             this.iQuestion = iPos;
-            this.iAnswer = this.iLine1 + this.iLine2;
+            this.iAnswer = 0;
             this.aLine1 = this.getAsBinaryArray(this.iLine1);
             this.aLine2 = this.getAsBinaryArray(this.iLine2);
         },
         
-            
         getAsBinaryArray:function(iNum){
             var aLine2 = ["0","0","0","0","0","0","0","0"];
             
@@ -160,17 +142,17 @@ $( document ).ready(function() {
         }
     };
     
-    var cSumQuestion = jQuery.extend(cQuestion,{
+    var cSumQuestion = jQuery.extend(cQuestion, {
         type:"binaryaddition",
-        oWeight:{
+        oWeight: {
             xor:      1,
             carry:    10,
             second:   30,
             three:    65,
-            overflow: 140
+            overflow: 130
         },
         
-        oExamMark:{
+        oExamMark: {
             xor:     1,
             carry:   1,
             second:  1,
@@ -178,8 +160,36 @@ $( document ).ready(function() {
             overflow:1
         },
         
-        getAppearances:function()
-        {
+        oVerbs: {
+            xor:     "http://utc-sheffield.github.io/taxonomy/thinking/demonstrated/",
+            carry:   "http://utc-sheffield.github.io/taxonomy/thinking/demonstrated/",
+            second:  "http://utc-sheffield.github.io/taxonomy/thinking/demonstrated/",
+            three:   "http://utc-sheffield.github.io/taxonomy/thinking/demonstrated/",
+            overflow:"http://utc-sheffield.github.io/taxonomy/thinking/explained/"
+        },
+        
+        oGrades: {
+            xor:     "D",
+            carry:   "C",
+            second:  "C",
+            three:   "C",
+            overflow:"B"
+        },
+        
+        make:function(){
+            this.iLine1 = Math.round(Math.random()*255);
+            this.iLine2 = Math.round(Math.random()*255);    
+        },
+        
+        genDetails:function(iPos){
+            this.iQuestion = iPos;
+            this.iAnswer = this.iLine1 + this.iLine2;
+            this.aLine1 = this.getAsBinaryArray(this.iLine1);
+            this.aLine2 = this.getAsBinaryArray(this.iLine2);
+        },
+        
+        
+        getAppearances:function() {
             var x = this.iLine1;
             var y = this.iLine2;
             
@@ -219,39 +229,74 @@ $( document ).ready(function() {
             if(x > 255) {
                 aAppearances.overflow = 1;
             } 
-            //console.log("aAppearances =", aAppearances);
             return aAppearances;
         },
-        calcValue:function(){
+        
+        calcValue:function() {
             var aAppearances = this.getAppearances();
             var iValue = 0;
             var iExam = 0;
             
             for (sType in this.oWeight) {
-                //console.log("sType =", sType, aAppearances[sType]);
                 iValue += this.oWeight[sType] * aAppearances[sType];
                 iExam += this.oExamMark[sType] * (aAppearances[sType]?1:0);
             }                   
-                
+            
+            this.aAppearances = aAppearances;
             this.iValue = iValue;
             this.iExam = iExam;
             return iValue;
         }
     });
     
-    oQuiz = {
+    var cQuiz = {
         aQuestions:[],
         iCurrentQuestion:0,
         iCurrentScore:0,
+        iCurrentMark:0,
+        iMaxMark:0,
         iCurrentMin:2,
         iCurrentMax:5,
-        
+                
         iMinDifficulty: 2,
         iMaxDifficulty: 200,
         
-        nextQuestion:function(){
+        saveQuiz: function() {
+            var aKeys = [
+                "aQuestions",
+                "iCurrentQuestion",
+                "iCurrentScore",
+                "iCurrentMin",
+                "iCurrentMax",
+                "iMinDifficulty",
+                "iMaxDifficulty",
+                "iCurrentMark",
+                "iMaxMark"
+            ];
+            var oQuizSave = {};
+            for (var i = 0; i < aKeys.length; i++) {
+                var sKey = aKeys[i];
+                oQuizSave[sKey] = this[sKey];
+            }
+            var sSave = JSON.stringify(oQuizSave);
+            localStorage.setItem("quiz_binary-addition_progress", sSave);
+        },
+        loadQuiz:function(oSaved) {
+            var aKeys = Object.keys(oSaved);
+            for (var i = 0; i < aKeys.length; i++) {
+                var sKey = aKeys[i];
+                this[sKey] = oSaved[sKey];
+            }
+            
+            $(".sumcompleted").html(this.iCurrentScore);
+            $(".sumscore").html(this.iCurrentScore);
+            $(".summarks").html(this.iCurrentMark+"/"+this.iMaxMark);
+        },
+        nextQuestion:function() {
+            this.saveQuiz();
             var iValue = 0;
             var iTry = 0;
+            // TODO : Integrate with other question types
             var oQuestion = Object.create(cSumQuestion);
             do {
                 oQuestion.make();
@@ -260,52 +305,45 @@ $( document ).ready(function() {
                 iTry ++;
             } while(iTry < 10000 && !(this.iCurrentMin <= iValue && iValue <= Math.min(this.iCurrentMax, this.iMaxDifficulty )));
             
-            if(iTry === 10000)
-            {
+            if(iTry === 10000) {
                 console.log("Limit Reached");
             }
-            
-            /*var aApp = oQuestion.getAppearances();
-            console.log("aApp =", aApp);
-            oQuestion.calcValue();
-            console.log("nextQuestion this.iCurrentMin =", this.iCurrentMin);
-            console.log("nextQuestion this.iCurrentMax =", this.iCurrentMax);
-            */
             
             this.iCurrentQuestion ++;
             oQuestion.genDetails(this.iCurrentQuestion);
             
             this.aQuestions.push(oQuestion);    
             this.oQuestion = oQuestion;
-            //console.log("nextQuestion oQuestion.iValue =", oQuestion.iValue);
             
             return oQuestion;
         },
         
-        setOutput: function($eOut)
-        {
+        setOutput: function($eOut) {
             this.$eOut = $eOut;
             this.eSumline1 = this.$eOut.find(".sumline1>td");
             this.eSumline2 = this.$eOut.find(".sumline2>td");
             this.eSumAnswer = this.$eOut.find(".sumresult>td");
             this.eSumCarry = this.$eOut.find(".sumcarry>td");
+            this.eExplain =  this.$eOut.nextAll(".sumexplain");
         },
         
         // TODO : Refactor into cQuestion
-        renderLine: function(eTR, iNumber)
-        {
+        renderLine: function(eTR, iNumber) {
             this.oQuestion.renderLine(eTR, iNumber);
         },
         
-        renderQuestion: function()
-        {
+        renderQuestion: function() {
             this.$eOut.removeClass();
             this.$eOut.find("td").removeClass();
+            
+            this.eSumCarry = this.$eOut.find(".sumcarry>td");
+            this.eExplain.val("");
             
             $(".sumnextquestion").hide();
             $(".sumcheck").show();
             
             $(".sumhint").hide();
+            $("#sumzerofill2").hide();
             
             $("#questionnumber").html(this.oQuestion.iQuestion);
             
@@ -315,8 +353,7 @@ $( document ).ready(function() {
             
             var eTR = this.$eOut.find(".sumresult>td");
             var eTR2 = this.$eOut.find(".sumcarry>td");
-            for(var i = 0 ; i < 9; i++)
-            {
+            for(var i = 0 ; i < 9; i++) {
                 eTR[i].innerHTML = "&nbsp;";
                 eTR2[i].innerHTML = "&nbsp;";
                 $(eTR[i]).removeClass("sumincorrectcell");
@@ -326,46 +363,45 @@ $( document ).ready(function() {
         },
         
         // TODO : Refactor into cQuestion
-        getIntValueFromTR:function getIntValueFromTR($jEles,bStrict){
-            var aData = jQuery.makeArray($jEles.map(function(indx,ele){
+        getIntValueFromTR:function getIntValueFromTR($jEles,bStrict) {
+            var aData = jQuery.makeArray($jEles.map(function(indx,ele) {
                 return ele.innerHTML;
             }));
             var bComplete = true;
             
-            if(aData[0] === "&nbsp;")
-            {
+            if(aData[0] === "&nbsp;") {
                 aData[0] = "0";
             }
             
-            if(bStrict && aData.some(function(xItem){return xItem === "&nbsp;";}))
-            {
+            if(bStrict && aData.some(function(xItem){return xItem === "&nbsp;";})) {
                 bComplete = false;
             }
             
-            var aAnswers = aData.map(function(xItem){return xItem === "&nbsp;"?"0":xItem;});
+            var aAnswers = aData.map(function(xItem) {
+                return xItem === "&nbsp;"?"0":xItem;
+            });
             var iNumber = parseInt(aAnswers.join(""), 2);
             return {"iNumber":iNumber, "bComplete":bComplete };
         },
     
-        showMessage:function(sMsg, sClass){
+        showMessage:function(sMsg, sClass) {
             $(".sumfeedback").show();
             $(".sumfeedback").html(sMsg).addClass(sClass);
-            
         },
         
-        removeMessage:function(){
+        removeMessage:function() {
             $(".sumfeedback").html("").removeClass("sumincorrect sumcorrect sumwarning");
             $(".sumfeedback").hide();
             clearTimeout(this.iCurrTimer); 
         },
         
-        onHint:function( evt){
+        onHint:function(evt) {
             // TODO : Refactor into cSumQuestion
             // TODO : (use makeNoharder afterwards)
             var iRightmostError = 9;
             
-            do{
-                
+            do {
+                this.$eOut.find("td").removeClass("sumhighlight");
                 iRightmostError --;
                 
                 var iA = $(this.eSumline1[iRightmostError]).html() === "1"?1:0;
@@ -379,100 +415,85 @@ $( document ).ready(function() {
                 var bInvolvesCarryIn = false;
                 var bInvolvesCarryOut = false;
                 
-                if((iA + iB + iC) === 0 && !iO && iOC)
-                {
+                if((iA + iB + iC) === 0 && !iO && iOC) {
                     bInvolvesCarryIn = true;
                     bInvolvesCarryOut = true;
                     sHint = "There should be nothing to carry from this column"; 
                 }
                 
-                if((iA + iB + iC) === 0 && iO)
-                {
+                if((iA + iB + iC) === 0 && iO) {
                     bInvolvesCarryIn = true;
                     sHint = "What have you added up?";
                 }
                 
-                if((iA + iB) === 0 && iC && !iO)
-                {
+                if((iA + iB) === 0 && iC && !iO) {
                     bInvolvesCarryIn = true;
                     sHint = "Remember to add in the 1 you have carried into this column";
                 }
                 
-                if((iA + iB) === 1 && iC === 0  && !iO && !iOC)
-                {
+                if((iA + iB) === 1 && iC === 0  && !iO && !iOC) {
                     sHint = "Add up this column";
                 }
                 
-                if((iA + iB + iC) === 2  && !iO && !iOC)
-                {
+                if((iA + iB + iC) === 2  && !iO && !iOC) {
                     bInvolvesCarryIn = true;
                     bInvolvesCarryOut = true;
                     sHint = "1+1=2 which is 10 in binary, so we carry that 1 to the left and keep the 0 in the Answer for this column";
                 }
                 
-                if((iA + iB + iC) === 1 && iOC)
-                {
+                if((iA + iB + iC) === 1 && iOC) {
                     bInvolvesCarryIn = true;
                     bInvolvesCarryOut = true;
                     sHint = "There is nothing to carry from this column";
                 }
                 
-                if((iA + iB + iC) === 2  && iO && !iOC)
-                {
+                if((iA + iB + iC) === 2  && iO && !iOC) {
                     bInvolvesCarryIn = true;
                     bInvolvesCarryOut = true;
                     sHint = "1+1=2 which is 10 in binary, so we carry that 1 to the left and keep the 0 in this column";
                 }
                 
-                if((iA + iB + iC) === 2  && iO && iOC)
-                {
+                if((iA + iB + iC) === 2  && iO && iOC) {
                     bInvolvesCarryIn = true;
                     sHint = "1+1=2 which is 10 in binary, so we carry that 1 to the left and keep the 0 in this column";
                 }
                 
-                if((iA + iB + iC) === 3 && !iO && !iOC)
-                {
+                if((iA + iB + iC) === 3 && !iO && !iOC) {
                     bInvolvesCarryIn = true;
                     sHint = "1+1+1=3 which is 11 in binary, so we carry 1 to the left and keep 1 in this column";
                 }
                 
-                if((iA + iB + iC) === 3 && !iO && iOC)
-                {
+                if((iA + iB + iC) === 3 && !iO && iOC) {
                     bInvolvesCarryIn = true;
                     sHint = "1+1+1=3 which is 11 in binary, so we carry 1 to the left and keep 1 in this column";
                 }
                 
-                if((iA + iB + iC) === 3 && iO && !iOC)
-                {
+                if((iA + iB + iC) === 3 && iO && !iOC) {
                     bInvolvesCarryIn = true;
                     bInvolvesCarryOut = true;
                     sHint = "1+1+1=3 which is 11 in binary, so we carry 1 to the left and keep 1 in this column";
                 }
-                //console.log("sHint =", sHint);
                 
             } while (iRightmostError >= 0 && sHint === "");
             
-            if(sHint)
-            {
+            if(sHint) {
                 this.$eOut.find("td").removeClass();
                 $(this.eSumline1[iRightmostError]).addClass("sumhighlight");
                 $(this.eSumline2[iRightmostError]).addClass("sumhighlight");
                 $(this.eSumAnswer[iRightmostError]).addClass("sumhighlight");
-                if(bInvolvesCarryIn)
-                {
+                if(bInvolvesCarryIn) {
                     $(this.eSumCarry[iRightmostError]).addClass("sumhighlight");
                 }
-                if(bInvolvesCarryOut)
-                {
+                if(bInvolvesCarryOut) {
                     $(this.eSumCarry[iRightmostError - 1]).addClass("sumhighlight");
                 }
-                
+                clearTimeout(this.iCurrTimer); 
                 this.showMessage(sHint, "sumwarning");
             }
         },
         
         // TODO : Refactor into cSumQuestion
-        onHighlightErrors:function( evt){
+        onHighlightErrors:function(evt) {
             // Using hinting instead of error highlighting, but keep the code
             var oRes = this.getIntValueFromTR($(".sumresult>td"),true);
             var iResNumber = oRes.iNumber;
@@ -483,25 +504,20 @@ $( document ).ready(function() {
             
             var eCell = null;
             var eTR = this.$eOut.find(".sumresult>td");
-            for(var i = 0 ; i < aLine.length; i++)
-            {
-                if(aLine[iMaxLinePos-i] === "1")
-                {    
+            for(var i = 0 ; i < aLine.length; i++) {
+                if(aLine[iMaxLinePos-i] === "1") {    
                     eCell = $(eTR[8-i]);
-                    if(eCell.html() !== "&nbsp;")
-                    {
+                    if(eCell.html() !== "&nbsp;") {
                         eCell.addClass("sumincorrectcell");
                     }
                 }
             }
-            
             this.oQuestion.iAttempts =+ 2;
-        
         },
         
-        onCheckAnswer:function( evt ){
+        onCheckAnswer:function( evt ) {
             this.$eOut.find("td").removeClass();
-            
+            clearTimeout(this.iCurrTimer);
             // TODO : Refactor into cSumQuestion
             // Should return a passed / failed / nearly, a message and a next step? 
             var oRes = this.getIntValueFromTR($(".sumresult>td"),true);
@@ -510,102 +526,104 @@ $( document ).ready(function() {
             
             this.oQuestion.iAttempts ++;
             
-            if(bResult)
-            {
-                if (oRes.bComplete === false)
-                {
+            if(bResult) {
+                if (oRes.bComplete === false) {
                     this.oQuestion.iAttempts --;
                     $(".sumcheck").hide();
                     $("#sumzerofill2").show();
                     this.showMessage("Nearly: just need to fill in the  missing 0's", "sumwarning");
+                    
+                    this.iCurrTimer = setTimeout(function() {
+                        oQuiz.onZeroFill();
+                    },5000);
+                    
+                    
                     return true;
+                }
+                
+                if (this.oQuestion.aAppearances.overflow) {
+                    var rWords = /(^|\W)(9|too|many|more|bit|bits|out|long|enough)(\W|$)/ig
+                    var text = this.eExplain.val();
+                    var bExplain = rWords.test(text);
+                    if(!bExplain) {
+                        this.showMessage("Nearly: just need explain the overflow", "sumwarning");
+                        return true;
+                    }
                 }
                 
                 this.showMessage("Well Done", "sumcorrect");
                 $(".sumnextquestion").show(); 
                 $(".sumcheck").hide();
                 
-                this.iCurrTimer = setTimeout(function(){oQuiz.onNextQuestion();},5000);
+                this.iCurrTimer = setTimeout(function() {
+                    oQuiz.onNextQuestion();
+                },5000);
                 this.iCurrentScore = this.iCurrentScore + Math.floor(this.oQuestion.iValue / this.oQuestion.iAttempts);
-                //console.log("onCheckAnswer this.oQuestion.iValue =", this.oQuestion.iValue);
-                //console.log("onCheckAnswer this.oQuestion.iAttempts =", this.oQuestion.iAttempts);
-                //console.log("onCheckAnswer this.iCurrentScore =", this.iCurrentScore);
+                
+                this.iCurrentMark += this.oQuestion.iExam;
+                this.iMaxMark += this.oQuestion.iExam;
                 
                 $(".sumcompleted").html(this.iCurrentScore);
                 $(".sumscore").html(this.iCurrentScore);
+                $(".summarks").html(this.iCurrentMark+"/"+this.iMaxMark);
+                
             }
-            else if(this.oQuestion.iAttempts > 4)
-            {
+            else if(this.oQuestion.iAttempts > 4) {
                 this.showMessage("You  seem to be struggling, try this one.", "sumwarning");
                 this.iCurrTimer = setTimeout(this.removeMessage,5000);
-                this.makeEasier();            
+                this.makeEasier();     
+                
+                this.iMaxMark += this.oQuestion.iExam;
+                $(".summarks").html(this.iCurrentMark+"/"+this.iMaxMark);
+                
                 oQuiz.nextQuestion();
                 oQuiz.renderQuestion();
-            }
-            else
-            {
+            } else {
                 this.showMessage("Incorrect!", "sumincorrect");
                 this.iCurrTimer = setTimeout(this.removeMessage,5000);
                 $(".sumhint").show();
             }
         },
         
-        makeHarder:function()
-        {
-            //this.iCurrentMin = Math.min(this.oQuestion.iValue+1, Math.floor(this.iMaxDifficulty * 0.9));
-            //console.log("makeHarder this.oQuestion.iValue =", this.oQuestion.iValue);
+        makeHarder:function() {
             var fEase = Math.max(0.2, 1 / this.oQuestion.iAttempts);
-            //console.log("makeHarder fEase =", fEase);
-            //this.iCurrentMax = Math.min(Math.ceil(Math.min(this.iMaxDifficulty/10, (fEase* this.iCurrentMax))+this.oQuestion.iValue), this.iMaxDifficulty);
             this.iCurrentMax = Math.min(Math.ceil(Math.min(this.iMaxDifficulty/10, (fEase* this.oQuestion.iValue))+this.oQuestion.iValue), this.iMaxDifficulty);
             this.iCurrentMin = Math.max(this.oQuestion.iValue + 1, Math.floor(this.iCurrentMax * 0.8));            
-            console.log("makeHarder this.iCurrentMin =", this.iCurrentMin);
-            console.log("makeHarder this.iCurrentMax =", this.iCurrentMax);
         },
         
-        makeNoHarder:function()
-        {
+        makeNoHarder:function() {
             this.iCurrentMax = Math.min(this.oQuestion.iValue, this.iMaxDifficulty); 
-            console.log("makeNoHarder this.iCurrentMax =", this.iCurrentMax);
         },
         
-        makeEasier:function()
-        {
+        makeEasier:function() {
             var fEase = Math.max(0, 1-(0.3 * this.oQuestion.iAttempts));
             this.iCurrentMax = Math.ceil(Math.max(this.oQuestion.iValue*fEase, Math.floor(this.iMinDifficulty * 1.5)));
             this.iCurrentMin = Math.ceil(Math.max(this.oQuestion.iValue*(fEase-0.1), Math.floor(this.iMinDifficulty)));
-            console.log("makeEasier this.iCurrentMin =", this.iCurrentMin);
-            console.log("makeEasier this.iCurrentMax =", this.iCurrentMax);
         },
         
-        onSkipQuestion:function( evt ){
-            //this.makeNoHarder();            
+        onSkipQuestion:function( evt ) {
+            //this.makeNoHarder();   
+            this.iMaxMark += this.oQuestion.iExam;
+            $(".summarks").html(this.iCurrentMark+"/"+this.iMaxMark);
             this.makeEasier();            
             oQuiz.nextQuestion();
             oQuiz.renderQuestion();
         },
         
-        onEndQuiz:function( evt ){
+        onEndQuiz:function( evt ) {
             var source   = $("#entry-template").html();
             var iRawScore = this.iCurrentScore;
-            //console.log("this =", this);
             
             var aPaperAnswers = this.aQuestions.map(function(val, ind){
-                    
                 var sAns = logBinary((ind+1).toString()+") ", val.iAnswer);
-                //console.log("sAns =", sAns);
                 return sAns;
             });
             
-            //console.log("aPaperAnswers =", aPaperAnswers);
+            var sQs = JSON.stringify(this);
             
-            //console.log("iRawScore =", iRawScore);
             var iScaledScore = Math.round((this.iCurrentMax / this.iMaxDifficulty) * 100)/ 100;
-            //console.log("iScaledScore =", iScaledScore);
             var bSuccess = (iScaledScore > 0.50);
-            //console.log("bSuccess =", bSuccess);
             var bCompletion = (this.iCurrentQuestion >= 10);
-            //console.log("bCompletion =", bCompletion);
             
             var endStatement = defaultStatement;    
             endStatement.verb = {
@@ -625,42 +643,42 @@ $( document ).ready(function() {
                 }
             };
             
-            //console.log("endStatement =", endStatement);
             if(defaultStatement.actor.mbox.length) {
                 tincan.sendStatement(endStatement);
             }
             
             var template = Handlebars.compile(source);
             var context = this;
-            console.log("context =", context);
             var html    = template(context);
             var sURL =  "data:text/html;base64," + btoa(html);
             
             $(".quizholder").html("<h2>Thank you</h2><p>Your paper home work should have opened automatically for you to print out. If it hasn't click <a target=\"_blank\" href=\""+sURL+"\">here</a>.</p>");
             $(".explaination").hide();
+            localStorage.setItem("quiz_binary-addition_progress", "{}");
             
             window.open(sURL,'_blank');
             //$("#dump").html(html);
         },
         
         // TODO : oQuiz should ask oQuestion if this is needed
-        onZeroFill:function( evt ){
+        onZeroFill:function( evt ) {
             var oEmpty = $(".sumresult>td").filter(function(indx,ele){
                 return ele.innerHTML === "&nbsp;";
             });
             oEmpty.html("0");
             
-            if ($(".sumresult>td:first").html() === "0")
-            {
+            if ($(".sumresult>td:first").html() === "0") {
                 $(".sumresult>td:first").html("&nbsp;");
             }
             this.removeMessage();
             $("#sumzerofill2").hide();
             $(".sumcheck").show();
-            this.onCheckAnswer();
+            this.iCurrTimer = setTimeout(function() {
+                oQuiz.onCheckAnswer();
+            },5000);
         },
         
-        onNextQuestion:function( evt ){
+        onNextQuestion:function( evt ) {
             clearTimeout(this.iCurrTimer); 
             this.removeMessage();
             this.makeHarder();            
@@ -669,13 +687,18 @@ $( document ).ready(function() {
         }
     };
     
+    oQuiz = Object.create(cQuiz);
+    if(localStorage.getItem("quiz_binary-addition_progress")) {
+        var quiz_progress = JSON.parse(localStorage.getItem("quiz_binary-addition_progress"));
+        oQuiz.loadQuiz(quiz_progress);
+    } 
+    
     oQuiz.nextQuestion();
     oQuiz.setOutput($("#questionholder"));
     oQuiz.renderQuestion();
     
-    
-    // TODO add add binary click input class to the html and use that for this
-    $(".sumresult>td").click(function( evt ){
+    // Done : add binary click input class to the html and use that for this
+    $(".binaryinput>td").click(function( evt ){
         var sCurrHTML = $(evt.target).html();
         switch(sCurrHTML)
         {
@@ -691,7 +714,7 @@ $( document ).ready(function() {
         }
     });
     
-    $(".sumcarry>td").click(function( evt ){
+    $(".binarycarryinput>td").click(function( evt ){
         var sCurrHTML = $(evt.target).html();
         switch(sCurrHTML)
         {

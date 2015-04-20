@@ -1,25 +1,34 @@
 <html>
     <head>
-        <!-- <script src="//code.jquery.com/jquery-1.11.0.min.js"></script> -->
+        
         <script src="external/jquery-1.11.0.min.js"></script>
         <script src="external/handlebars-v1.3.0.js"></script>
         <script src="TinCanJS/build/tincan-min.js"></script>
         <script src="js/tincan_config.js"></script>
         <script src="js/active_learn.js"></script>
         <script src="js/binary-addition.js"></script>
-        <link href="css/binary-addition.css" rel="stylesheet" type="text/css" media="all">
+        <link  href="css/main.css" rel="stylesheet" type="text/css" media="all">
+        <link  href="css/binary-addition.css" rel="stylesheet" type="text/css" media="all">
+        <!-- http://cssnewbie.com/example/css-only-accordion/vertical.html -->
     </head>
     <body>
+    
+        <header>
+        
         <h1>Binary Addition Quiz</h1>
-        <div id="email">
-             <label for="tincanemail">School Email Address</label> <input type="email" id="tincanemail" />
-             <button id="save">Save</button>
-        </div>
+            
+            <div id="email">
+                 <label for="tincanemail">School Email Address</label> <input type="email" id="tincanemail" />
+                 <button id="save">Save</button>
+            </div>
+        </header>
+        
+        
         <div class="explaination">
             <h2>Explaination</h2>
-            <p>The grey boxes respond to mouse clicks, Clicking once will set it to "1", clicking again set it to "0".(You can just fill in the "1"s and use the "Blanks to 0's" button)</p>
+            <p>The grey boxes respond to mouse clicks, Clicking once will set it to "1", clicking again set it to "0". (You can just fill in the "1"s and use the "Blanks to 0's" button)</p>
             <p>The questions will get harder as you go</p>
-            <p>Remember to work from the right, adding 0ne colomn at a time (and marking the carry row of the next column to the left if you need to)</p>
+            <p>Remember to work from the right, adding one column at a time (and marking the carry row of the next column to the left if you need to)</p>
             
         </div>
         <div class="quizholder">
@@ -27,9 +36,10 @@
             <table class="sumbinary" id="questionholder" >
                 <tr class="sumline1 sumcolumns" ><th>&nbsp;</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th>&nbsp;</th></tr>
                 <tr class="sumline2" ><th>+</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th>&nbsp;</th></tr>
-                <tr class="sumresult"><th>=</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th><button class="sumzerofill">Blanks to 0's</button></th></tr>
-                <tr class="sumcarry" ><th>Carry</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="invalid">&nbsp;</td><th>&nbsp;</th></tr>
+                <tr class="sumresult binaryinput"><th>=</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th><button class="sumzerofill">Blanks to 0's</button></th></tr>
+                <tr class="sumcarry binarycarryinput" ><th>Carry</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="invalid">&nbsp;</td><th>&nbsp;</th></tr>
             </table>
+            <label for="sumexplain">Explain any overflow</label> <input type="text" class="sumexplain" length="100" size="40"/><br />
             <button class="sumcheck">Check Answer</button>
             <button class="sumzerofill" id="sumzerofill2">Blanks to 0's</button>
             <button class="sumnextquestion">Next Question</button>
@@ -39,8 +49,9 @@
             <div class="sumfeedback">&nbsp;</div>
             <table>
                 <tr>
-                    <!-- <th>Completed</th><td class="sumcompleted">&nbsp;</td> -->
                     <th>Current Score</th><td class="sumscore">&nbsp;</td>
+                
+                    <th>Exam Marks</th><td class="summarks">&nbsp;</td>
                 </tr>
             </table>
         </div>
@@ -86,6 +97,5 @@
 
 </script>
     </body>
-<!-- <tr class="sumtitle sumcolumns" ><th>Position Values</th><th>&nbsp;</th><th >128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th><th>&nbsp;</th></tr> -->
 </html>
 
