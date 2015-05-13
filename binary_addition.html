@@ -3,9 +3,11 @@
         
         <script src="external/jquery-1.11.0.min.js"></script>
         <script src="external/handlebars-v1.3.0.js"></script>
+        <!-- 
         <script src="TinCanJS/build/tincan-min.js"></script>
         <script src="js/tincan_config.js"></script>
         <script src="js/active_learn.js"></script>
+        -->
         <script src="js/binary-addition.js"></script>
         <link  href="css/main.css" rel="stylesheet" type="text/css" media="all">
         <link  href="css/binary-addition.css" rel="stylesheet" type="text/css" media="all">
@@ -27,7 +29,7 @@
         <div class="explaination">
             <h2>Explaination</h2>
             <p>The grey boxes respond to mouse clicks, Clicking once will set it to "1", clicking again set it to "0". (You can just fill in the "1"s and use the "Blanks to 0's" button)</p>
-            <p>The questions will get harder as you go</p>
+            <p>The questions will get harder as you go. When you have praciticed enough online please click the "Finish Exercise" button, and print out the work sheet to do on paper. And hand that in asap.</p>
             <p>Remember to work from the right, adding one column at a time (and marking the carry row of the next column to the left if you need to)</p>
             
         </div>
@@ -79,6 +81,7 @@
     </head>
     <body>
         <h1>Binary Addition - Paper Quiz</h1>
+        
         <p>Please print this sheet out and complete these questions by hand.</p>
         
         {{#aQuestions}}
@@ -92,6 +95,11 @@
             </table>
         </div>
         {{/aQuestions}}
+        
+        <h2>Online Results</h2>
+        <p>    Score = {{iCurrentScore}}<br />
+            Marks = {{iCurrentMark}} / {{iMaxMark}}
+            </p>
     </body>
 </html>
 
