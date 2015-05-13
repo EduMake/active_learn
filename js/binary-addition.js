@@ -29,7 +29,7 @@ $( document ).ready(function() {
     // TODO : test on the MS surfaces
     
     var tincan = false;
-    if (TinCanRecordStores.length) {
+    if (typeof TinCanRecordStores !== "undefined" && TinCanRecordStores.length) {
         tincan = new TinCan (
             {
                 recordStores: TinCanRecordStores
@@ -58,11 +58,11 @@ $( document ).ready(function() {
     };
     //  https://utc-sheffield.github.io/tincan_curriculum/OCR_GCSE_Computing_2012/#2-1-4-D
     
-    if(localStorage.getItem("tincan_mbox")) {
+    if(tincan !== false && localStorage.getItem("tincan_mbox")) {
         defaultStatement.actor.mbox = localStorage.getItem("tincan_mbox");
     }    
         
-    if(defaultStatement.actor.mbox.length) {
+    if(tincan !== false && defaultStatement.actor.mbox.length) {
         tincan.sendStatement(defaultStatement);
     }
     
@@ -652,7 +652,7 @@ $( document ).ready(function() {
             var html    = template(context);
             var sURL =  "data:text/html;base64," + btoa(html);
             
-            $(".quizholder").html("<h2>Thank you</h2><p>Your paper home work should have opened automatically for you to print out. If it hasn't click <a target=\"_blank\" href=\""+sURL+"\">here</a>.</p>");
+            $(".quizholder").html("<h2>Thank you</h2><p>Your paper work work should have opened automatically for you to print out. If it hasn't click <a target=\"_blank\" href=\""+sURL+"\">here</a>.</p>");
             $(".explaination").hide();
             localStorage.setItem("quiz_binary-addition_progress", "{}");
             
