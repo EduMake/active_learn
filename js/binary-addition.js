@@ -648,7 +648,13 @@ $( document ).ready(function() {
             }
             
             var template = Handlebars.compile(source);
-            var context = this;
+            var context = {
+                    aQuestions:     this.aQuestions,
+                    iCurrentScore:  this.iCurrentScore,
+                    iCurrentMark:   this.iCurrentMark,
+                    iMaxMark:       this.iMaxMark
+            };
+            
             var html    = template(context);
             var sURL =  "data:text/html;base64," + btoa(html);
             

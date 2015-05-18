@@ -1,0 +1,109 @@
+
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+#tincanemail {
+    width: 20em;
+}
+#editor {
+    border-radius: 4px 4px 0;
+    height: 16em;
+    margin-top: 5px;
+}
+#exercises {
+    background: none repeat scroll 0 0 #ddddff;
+    border-radius: 4px 4px 0;
+    float: right;
+    width: 38%;
+}
+#taskbox {
+    background: none repeat scroll 0 0 #eeffee;
+    border-radius: 4px 4px 0;
+    float: right;
+    width: 38%;
+}
+
+.explaination {
+    clear: both;
+    height: 5em;
+    overflow: hidden;
+}
+.explaination:hover{
+    height: 50%;
+
+}
+
+
+h1 {
+    float: left;
+    min-width: 60%;
+}
+#workspace {
+    border-radius: 4px 4px 0;
+    float: left;
+    min-width: 60%;
+}
+#tincanid {
+    border-radius: 4px 4px 0;
+    float: right;
+    font-size: 0.8em;
+    width: 38%;
+}
+#simulationbox {
+    background: none repeat scroll 0 0 #eeeeee;
+    border-radius: 4px 4px 0;
+    clear: both;
+    float: left;
+    min-width: 60%;
+}
+#tests {
+    background: none repeat scroll 0 0 #ffeeee;
+    border-radius: 4px 4px 0;
+    float: right;
+    font-size: 0.8em;
+    width: 38%;
+}
+#testoutput {
+    
+    border-radius: 4px 4px 0;
+}
+#result {
+    border-radius: 4px 4px 0;
+}
+#simulationbox label {
+    display: inline-block;
+    font-weight: bold;
+    width: 40%;
+}
+.pass:before {
+    color: blue;
+    content: "PASS: ";
+    font-weight: bold;
+}
+.fail:before {
+    color: red;
+    content: "FAIL: ";
+    font-weight: bold;
+}
+
+.error:before {
+    color: red;
+    content: "ERROR: CODE NOT RUN: ";
+    font-weight: bold;
+}
+.warning:before {
+    color: orange;
+    content: "WARNING: ";
+    font-weight: bold;
+}
+
+#next{
+    font-weight: bold;
+    font-size: 1.8em;
+
+}
+
+
+.no-close .ui-dialog-titlebar-close {
+display: none;
+}
