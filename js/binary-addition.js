@@ -596,7 +596,7 @@ $( document ).ready(function() {
         },
         
         makeEasier:function() {
-            var fEase = Math.max(0, 1-(0.3 * this.oQuestion.iAttempts));
+            var fEase = Math.max(0.7, 1-(0.05 * this.oQuestion.iAttempts));
             this.iCurrentMax = Math.ceil(Math.max(this.oQuestion.iValue*fEase, Math.floor(this.iMinDifficulty * 1.5)));
             this.iCurrentMin = Math.ceil(Math.max(this.oQuestion.iValue*(fEase-0.1), Math.floor(this.iMinDifficulty)));
         },
