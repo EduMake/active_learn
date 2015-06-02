@@ -668,6 +668,10 @@ $( document ).ready(function() {
         
         // TODO : oQuiz should ask oQuestion if this is needed
         onZeroFill:function( evt ) {
+            var oRes = this.getIntValueFromTR($(".sumresult>td"),true);
+            var iResNumber = oRes.iNumber;
+            var bResult = (iResNumber === (this.oQuestion.iLine1 + this.oQuestion.iLine2));
+            
             var oEmpty = $(".sumresult>td").filter(function(indx,ele){
                 return ele.innerHTML === "&nbsp;";
             });
@@ -679,9 +683,11 @@ $( document ).ready(function() {
             this.removeMessage();
             $("#sumzerofill2").hide();
             $(".sumcheck").show();
-            this.iCurrTimer = setTimeout(function() {
-                oQuiz.onCheckAnswer();
-            },5000);
+            if(bResult) {
+                this.iCurrTimer = setTimeout(function() {
+                    oQuiz.onCheckAnswer();
+                },5000);
+            }
         },
         
         onNextQuestion:function( evt ) {
