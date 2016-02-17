@@ -1,17 +1,18 @@
 <html>
     <head>
         
-        <script src="external/jquery-1.11.0.min.js"></script>
-        <script src="external/handlebars-v1.3.0.js"></script>
-        <!-- 
-        <script src="TinCanJS/build/tincan-min.js"></script>
-        <script src="js/tincan_config.js"></script>
-        <script src="js/active_learn.js"></script>
-        -->
+        <!-- bower:js -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/tincan/build/tincan-min.js"></script>
+        <script src="bower_components/handlebars/handlebars.js"></script>
+        <!-- endbower -->
         <script src="js/binary-addition.js"></script>
+        
+        <!-- bower:css -->
+        <!-- endbower -->
         <link  href="css/main.css" rel="stylesheet" type="text/css" media="all">
         <link  href="css/binary-addition.css" rel="stylesheet" type="text/css" media="all">
-        <!-- http://cssnewbie.com/example/css-only-accordion/vertical.html -->
+        
     </head>
     <body>
     
@@ -38,7 +39,7 @@
             <table class="sumbinary" id="questionholder" >
                 <tr class="sumline1 sumcolumns" ><th>&nbsp;</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th>&nbsp;</th></tr>
                 <tr class="sumline2" ><th>+</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th>&nbsp;</th></tr>
-                <tr class="sumresult binaryinput"><th>=</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th><button class="sumzerofill">Blanks to 0's</button></th></tr>
+                <tr class="sumresult binaryinput"><th>=</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="subtlecursor">0</td><th><button class="sumzerofill">Blanks to 0's</button></th></tr>
                 <tr class="sumcarry binarycarryinput" ><th>Carry</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="invalid">&nbsp;</td><th>&nbsp;</th></tr>
             </table>
             <label for="sumexplain">Explain any overflow</label> <input type="text" class="sumexplain" length="100" size="40"/><br />

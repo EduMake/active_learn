@@ -62,4 +62,6 @@ td.sumincorrectcell{
     
 }
 
-
+td.subtlecursor{
+  background: #ddddee;  
+}

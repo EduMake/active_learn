@@ -1,0 +1,22 @@
+{
+  "name": "active_learn",
+  "version": "0.0.1",
+  "description": "Binary maths quizes for GCSE Computing prep",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/EduMake/active_learn.git"
+  },
+  "author": "Martyn Eggleton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EduMake/active_learn/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-wiredep": "~2.0.0"
+  }
+}
