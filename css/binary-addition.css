@@ -1,3 +1,6 @@
+.quizholder{
+    clear: both;
+}
 
 .invalid{ 
     color:red;
@@ -23,6 +26,10 @@ td.sumincorrectcell{
     min-width:2em;
 }
 
+#questionholder th { 
+    text-align:center;
+    }
+    
 .sumbinary { 
     text-align:center; 
     border-width:1px;
@@ -32,12 +39,16 @@ td.sumincorrectcell{
     background-color:#FFF;
 }
 
-.sumresult>td{ 
+.sumresult>td, span.sumresult{ 
     background-color:#DDD;
     font-weight:bold;
     cursor:pointer;
 }
 
+.sumcarry>th{
+    width:4em;
+    }
+    
 .sumcarry>td{ 
     color:#AAA;
     background-color:#F9F9F9;
@@ -51,7 +62,7 @@ td.sumincorrectcell{
     border-width: 2px;
 }
 
-.printsumline1>td{
+.printsumline1>td, .printsumline1>th{
     width:2em;
 }
 
@@ -59,9 +70,20 @@ td.sumincorrectcell{
     border-top-width: 2px;
     border-top-style: solid;
     border-top-color: black;
-    
 }
 
 td.subtlecursor{
   background: #ddddee;  
+}
+
+.sumline1>td, .sumline2>td, .binaryinput>td, .binaryinput>th, .sumcarry>td{
+    text-align: center;
+}
+
+.scores th{
+    width: 8em;
+}
+
+.scores td{
+    width: 4em;
 }
