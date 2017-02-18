@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{title}}</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/external/jquery-1.11.0.min.js"></script>
+    <script src="/external/handlebars-v1.3.0.js"></script>
+    <link  href="/stylesheets/main.css" rel="stylesheet" type="text/css" media="all">
+
+    {{#if resourceloader}}
+      <script src="/javascripts/{{resourceloader}}.js"></script>
+      <link  href="/stylesheets/{{resourceloader}}.css" rel="stylesheet" type="text/css" media="all">
+    {{/if}}
+    
+  </head>
+  <body>
+    {{{body}}}
+  </body>
+</html>
