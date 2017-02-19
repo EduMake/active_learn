@@ -1,35 +1,104 @@
-
-<div class="explaination">
-    <h2>Explaination</h2>
-    <p>The grey boxes respond to mouse clicks, Clicking once will set it to "1", clicking again set it to "0". (You can just fill in the "1"s and use the "Blanks to 0's" button)</p>
-    <p>The questions will get harder as you go. When you have praciticed enough online please click the "Finish Exercise" button, and print out the work sheet to do on paper. And hand that in asap.</p>
-    <p>Remember to work from the right, adding one column at a time (and marking the carry row of the next column to the left if you need to)</p>
-    
-</div>
 <div class="quizholder">
-    <h2>Question <span id="questionnumber" >1</span></h2>
-    <table class="sumbinary" id="questionholder" >
-        <tr class="sumline1 sumcolumns" ><th>&nbsp;</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th>&nbsp;</th></tr>
-        <tr class="sumline2" ><th>+</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th>&nbsp;</th></tr>
-        <tr class="sumresult binaryinput"><th>=</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th><button class="sumzerofill">Blanks to 0's</button></th></tr>
-        <tr class="sumcarry binarycarryinput" ><th>Carry</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="invalid">&nbsp;</td><th>&nbsp;</th></tr>
-    </table>
-    <label for="sumexplain">Explain any overflow</label> <input type="text" class="sumexplain" length="100" size="40"/><br />
-    <button class="sumcheck">Check Answer</button>
-    <button class="sumzerofill" id="sumzerofill2">Blanks to 0's</button>
-    <button class="sumnextquestion">Next Question</button>
-    <button class="sumhint">Get a Hint</button>
-    <button class="sumskip">Skip Question</button>
-    <button class="sumend">Finish Exercise</button>
-    <div class="sumfeedback">&nbsp;</div>
-    <table>
-        <tr>
-            <th>Current Score</th><td class="sumscore">&nbsp;</td>
-        
-            <th>Exam Marks</th><td class="summarks">&nbsp;</td>
-        </tr>
-    </table>
+  <table class="sumbinary" id="questionholder" >
+    <tr class="sumline1 sumcolumns" ><th>&nbsp;</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th>&nbsp;</th></tr>
+    <tr class="sumline2" ><th>+</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th>&nbsp;</th></tr>
+    <tr class="sumresult binaryinput"><th>=</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th><button class="sumzerofill btn btn-default"><span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>Blanks to 0's</button></th></tr>
+    <tr class="sumcarry binarycarryinput" ><th>Carry</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp; </td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="invalid">&nbsp;</td><th>&nbsp;</th></tr>
+  </table>
+  <label class="overflowlabel" for="sumexplain">Explain any overflow</label> <input type="text" class="sumexplain" length="100" size="40"/><br />
+  <button class="sumcheck btn btn-default"><span class="glyphicon glyphicon-check" aria-hidden="true"></span>Check Answer</button>
+  <button class="sumzerofill btn btn-default" id="sumzerofill2"><span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>Blanks to 0's</button>
+  <button class="sumnextquestion btn btn-default"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span>Next Question</button>
+  <button class="sumhint btn btn-default"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>Get a Hint</button>
+  <button class="sumskip btn btn-default"><span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>Skip Question</button>
+  
+  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+      Guidance
+  </button>
+      
+  <button class="sumend btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Finish Exercise</button>
+  
+  <div class="sumfeedback">&nbsp;</div>
+  <table class="scores">
+    <tr>
+      <th>Current Score</th><td class="sumscore">&nbsp;</td>
+      <th>Exam Marks</th><td class="summarks">&nbsp;</td>
+    </tr>
+  </table>
 </div>
 
 <div id="dump">
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Guidance</h4>
+      </div>
+      <div class="modal-body">
+        <h3>Using the quiz</h3>
+            <p>The <span class="sumresult">grey area</span> and Carry row responds to mouse clicks. Clicking once will set it to "1", clicking again set it to "0". (You can just fill in the "1"s and use the <button class="btn btn-default"><span class="glyphicon glyphicon-check" aria-hidden="true"></span>Blanks to 0's</button> button).</p>
+            <p>You can also use "1" "0" and "c" on the keyboard to type the answer from the right</p>
+            <p>Then click <button class="btn btn-default"><span class="glyphicon glyphicon-check" aria-hidden="true"></span>Check Answer</button> to check it. If you have not filled in the 0's that will be offered (but will happen automatically after a delay). If there are problems with your answer <button class="btn btn-default"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>Get a Hint</button> will appear, click it for in-depth guidance. Then click <button class=" btn btn-default"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span>Next Question</button> to move on (again this will also happen automatically after a delay)</p>
+        <h3>Finishing the exercise</h3>    
+            <p>The questions will get harder as you go. When you have praciticed enough online please click the <button class="btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Finish Exercise</button> button, and print out the work sheet to do on paper. And hand that in asap.</p>
+        <h3>Doing the questions</h3>    
+            <p>Remember to work from the right, adding one column at a time (and marking the carry row of the next column to the left if you need to)</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{{{raw-helper}}}}        
+<script id="entry-template" type="text/x-handlebars-template">
+<html>
+    <head>
+        <link href="css/binary-addition.css" rel="stylesheet" type="text/css" media="all">
+    <style>    
+        .printsumline1>td{
+            width:2em;
+        }
+        
+        .printsumresult>td, .printsumcarry>td{
+            border-top-width: 2px;
+            border-top-style: solid;
+            border-top-color: black;
+            
+        }
+    </style>
+    </head>
+    <body>
+        <h1>Binary Addition - Paper Quiz</h1>
+        
+        <p>Please print this sheet out and complete these questions by hand.</p>
+        
+        <p><strong>Name:</strong> ________________________________ </p>
+        
+        {{#aQuestions}}
+        <div class="quizholder">
+            <h2>Question {{iQuestion}}</h2>
+            <table class="sumbinary" id="questionholder" >
+                <tr class="printsumline1 " ><th>&nbsp;</th><td>&nbsp;</td>{{#each aLine1}}<td>{{this}}</td>{{/each}}</tr>
+                <tr class="printsumline2" ><th>+</th><td>&nbsp;</td>{{#each aLine2}}<td>{{this}}</td>{{/each}}</tr>
+                <tr class="printsumresult"><th>=</th><td colspan="9">&nbsp;</td></tr>
+                <tr class="printsumcarry" ><th>Carry</th><td colspan="9">&nbsp;</td></tr>
+            </table>
+        </div>
+        {{/aQuestions}}
+        
+        <h2>Online Results</h2>
+        <p>    Score = {{iCurrentScore}}<br />
+            Marks = {{iCurrentMark}} / {{iMaxMark}}
+            </p>
+    </body>
+</html>
+
+</script>
+{{{{/raw-helper}}}}

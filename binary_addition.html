@@ -1,58 +1,94 @@
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         
-        <script src="external/jquery-1.11.0.min.js"></script>
-        <script src="external/handlebars-v1.3.0.js"></script>
-        <!-- 
-        <script src="TinCanJS/build/tincan-min.js"></script>
-        <script src="js/tincan_config.js"></script>
-        <script src="js/active_learn.js"></script>
-        -->
+        <!-- bower:js -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/tincan/build/tincan-min.js"></script>
+        <script src="bower_components/handlebars/handlebars.js"></script>
+        <!-- endbower -->
+        
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="js/bootstrap.min.js"></script>
+        
         <script src="js/binary-addition.js"></script>
+        
+        <!-- bower:css -->
+        <!-- endbower -->
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        
         <link  href="css/main.css" rel="stylesheet" type="text/css" media="all">
         <link  href="css/binary-addition.css" rel="stylesheet" type="text/css" media="all">
-        <!-- http://cssnewbie.com/example/css-only-accordion/vertical.html -->
+        
     </head>
     <body>
     
-        <header>
-        
-        <h1>Binary Addition Quiz</h1>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Active Learn</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <!--
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            -->
+            
             <!--
             <div id="email">
                  <label for="tincanemail">School Email Address</label> <input type="email" id="tincanemail" />
                  <button id="save">Save</button>
             </div>-->
-        </header>
         
-        
-        <div class="explaination">
-            <h2>Explaination</h2>
-            <p>The grey boxes respond to mouse clicks, Clicking once will set it to "1", clicking again set it to "0". (You can just fill in the "1"s and use the "Blanks to 0's" button)</p>
-            <p>The questions will get harder as you go. When you have praciticed enough online please click the "Finish Exercise" button, and print out the work sheet to do on paper. And hand that in asap.</p>
-            <p>Remember to work from the right, adding one column at a time (and marking the carry row of the next column to the left if you need to)</p>
             
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1>Binary Addition <small>Question <span id="questionnumber" >1</span></small></h1>
         </div>
+        
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            Guidance
+        </button>
+        
         <div class="quizholder">
-            <h2>Question <span id="questionnumber" >1</span></h2>
             <table class="sumbinary" id="questionholder" >
                 <tr class="sumline1 sumcolumns" ><th>&nbsp;</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th>&nbsp;</th></tr>
                 <tr class="sumline2" ><th>+</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th>&nbsp;</th></tr>
-                <tr class="sumresult binaryinput"><th>=</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th><button class="sumzerofill">Blanks to 0's</button></th></tr>
-                <tr class="sumcarry binarycarryinput" ><th>Carry</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="invalid">&nbsp;</td><th>&nbsp;</th></tr>
+                <tr class="sumresult binaryinput"><th>=</th><td>&nbsp;</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><th><button class="sumzerofill btn btn-default"><span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>Blanks to 0's</button></th></tr>
+                <tr class="sumcarry binarycarryinput" ><th>Carry</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp; </td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class="invalid">&nbsp;</td><th>&nbsp;</th></tr>
             </table>
             <label for="sumexplain">Explain any overflow</label> <input type="text" class="sumexplain" length="100" size="40"/><br />
-            <button class="sumcheck">Check Answer</button>
-            <button class="sumzerofill" id="sumzerofill2">Blanks to 0's</button>
-            <button class="sumnextquestion">Next Question</button>
-            <button class="sumhint">Get a Hint</button>
-            <button class="sumskip">Skip Question</button>
-            <button class="sumend">Finish Exercise</button>
+            <button class="sumcheck btn btn-default"><span class="glyphicon glyphicon-check" aria-hidden="true"></span>Check Answer</button>
+            <button class="sumzerofill btn btn-default" id="sumzerofill2"><span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>Blanks to 0's</button>
+            <button class="sumnextquestion btn btn-default"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span>Next Question</button>
+            <button class="sumhint btn btn-default"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>Get a Hint</button>
+            <button class="sumskip btn btn-default"><span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>Skip Question</button>
+            <button class="sumend btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Finish Exercise</button>
             <div class="sumfeedback">&nbsp;</div>
-            <table>
+            <table class="scores">
                 <tr>
                     <th>Current Score</th><td class="sumscore">&nbsp;</td>
-                
                     <th>Exam Marks</th><td class="summarks">&nbsp;</td>
                 </tr>
             </table>
@@ -60,7 +96,33 @@
         
         <div id="dump">
         </div>
-        
+    </div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Guidance</h4>
+      </div>
+      <div class="modal-body">
+        <h3>Using the quiz</h3>
+            <p>The <span class="sumresult">grey area</span> and Carry row responds to mouse clicks. Clicking once will set it to "1", clicking again set it to "0". (You can just fill in the "1"s and use the <button class="btn btn-default"><span class="glyphicon glyphicon-check" aria-hidden="true"></span>Blanks to 0's</button> button).</p>
+            <p>You can also use "1" "0" and "c" on the keyboard to type the answer from the right</p>
+            <p>Then click <button class="btn btn-default"><span class="glyphicon glyphicon-check" aria-hidden="true"></span>Check Answer</button> to check it. If you have not filled in the 0's that will be offered (but will happen automatically after a delay). If there are problems with your answer <button class="btn btn-default"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>Get a Hint</button> will appear, click it for in-depth guidance. Then click <button class=" btn btn-default"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span>Next Question</button> to move on (again this will also happen automatically after a delay)</p>
+        <h3>Finishing the exercise</h3>    
+            <p>The questions will get harder as you go. When you have praciticed enough online please click the <button class="btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Finish Exercise</button> button, and print out the work sheet to do on paper. And hand that in asap.</p>
+        <h3>Doing the questions</h3>    
+            <p>Remember to work from the right, adding one column at a time (and marking the carry row of the next column to the left if you need to)</p>
+            
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
         
 <script id="entry-template" type="text/x-handlebars-template">
 <html>

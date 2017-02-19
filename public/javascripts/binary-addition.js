@@ -19,7 +19,6 @@ function bitCount(b) {
 
 $( document ).ready(function() {
     // IDEA : Add alternative input method (text box with letter spacing and RTL)
-    // IDEA : Keyboard Event lisenters for 0,1,c (carry), ENTER (subtle cursor )
     
     // TODO : TinCan it
     // TODO : Refactor all the checking etc. into the question type with, oQuiz just displays it.    
@@ -315,6 +314,8 @@ $( document ).ready(function() {
             this.aQuestions.push(oQuestion);    
             this.oQuestion = oQuestion;
             
+            iCurrentKeyInputPosition = 8;
+    
             return oQuestion;
         },
         
@@ -560,7 +561,9 @@ $( document ).ready(function() {
                 },5000);
                 this.iCurrentScore = this.iCurrentScore + Math.floor(this.oQuestion.iValue / this.oQuestion.iAttempts);
                 
-                this.iCurrentMark += this.oQuestion.iExam;
+                if(this.oQuestion.iAttempts < 2) {
+                  this.iCurrentMark += this.oQuestion.iExam;
+                }
                 this.iMaxMark += this.oQuestion.iExam;
                 
                 $(".sumcompleted").html(this.iCurrentScore);
@@ -708,6 +711,69 @@ $( document ).ready(function() {
     oQuiz.nextQuestion();
     oQuiz.setOutput($("#questionholder"));
     oQuiz.renderQuestion();
+    
+    // DONE : Keyboard Event lisenters for 0,1,c (carry) , ENTER 
+    // DONE : c for carry, means moving to a counter for keyboard input position
+    // TODO : subtle cursor, means moving to a counter for keyboard input position
+    // TODO : move the variables into the object and add some reset code
+    // TODO : When moving this into a binary control make it so there is an LTR mode
+    var iCurrentKeyInputPosition = 8;
+    var bRTL = true;
+    var iCursorPositionsLength = 9;
+    
+    var advanceSubtleCursor = function(){
+      var tds = $(".binaryinput>td");
+      var current = tds[iCurrentKeyInputPosition];
+      $(current).removeClass("subtlecursor");
+      if(bRTL) {
+        iCurrentKeyInputPosition --;
+      } else {
+        iCurrentKeyInputPosition ++;
+      }
+      
+      iCurrentKeyInputPosition = iCurrentKeyInputPosition  % iCursorPositionsLength;
+      var next = tds[iCurrentKeyInputPosition];
+      $(next).addClass("subtlecursor");
+      console.log("next =", next);
+    };
+    
+    $( document ).keydown(function( event ) { 
+      if($(event.target).is("input")){
+        return true;
+      }
+      
+      //console.log("empty =", empty);var tds = $(".binaryinput>td");
+      var tds = $(".binaryinput>td");
+      var next = tds[iCurrentKeyInputPosition];
+      
+      if ( event.which == 48 ) { // 0
+        $(next).html("0");
+        advanceSubtleCursor();
+        event.preventDefault();
+      }
+      
+      if ( event.which == 49 ) { // 1
+        $(next).html("1");
+        advanceSubtleCursor();
+        event.preventDefault();
+      } 
+      
+      if ( event.which == 67 ) { // carry
+        var carrys = $(".binarycarryinput>td")
+        $(carrys[iCurrentKeyInputPosition]).html("1");
+        //console.log("carrys =", carrys);
+        //console.log("iCurrentKeyInputPosition =", iCurrentKeyInputPosition);
+        event.preventDefault();
+      }
+      
+      if ( event.which == 13 ) { // enter
+        oQuiz.onCheckAnswer();
+        event.preventDefault();
+      }
+      
+    });
+    
+    
     
     // Done : add binary click input class to the html and use that for this
     $(".binaryinput>td").click(function( evt ){

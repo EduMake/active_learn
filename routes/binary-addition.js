@@ -1,14 +1,17 @@
 var express = require('express');
 var router = express.Router();
 
-  
 /* GET binary-addition page. */
-router.get('/', function(req, res, next) {
-    
-    require('connect-ensure-login').ensureLoggedIn();
-
-    console.log("res.locals", res.locals, "req.user", req.user);
-  res.render('binary-addition', { resourceloader: 'binary-addition', title: 'Binary Addition Quiz' });
+router.get('/', 
+  require('connect-ensure-login').ensureLoggedIn(),
+  function(req, res, next) {
+    res.render('binary-addition', 
+        {
+            resourceloader: 'binary-addition', 
+            title: 'Binary Addition Quiz',
+            user:req.user, 
+            nav:req.app.locals.nav    
+        });
 });
 
 module.exports = router;
