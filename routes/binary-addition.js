@@ -8,6 +8,7 @@ router.get('/',
     res.render('binary-addition', 
         {
             resourceloader: 'binary-addition', 
+            questions:true,
             title: 'Binary Addition Quiz',
             user:req.user, 
             nav:req.app.locals.nav    

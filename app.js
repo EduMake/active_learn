@@ -8,7 +8,14 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+
 var binaryaddition = require('./routes/binary-addition');
+var binarydenary = require('./routes/binary-denary');
+var binaryhex = require('./routes/binary-hex');
+var denarybinarydivision = require('./routes/denary-binary-division');
+var denarybinarysubtraction = require('./routes/denary-binary-subtraction');
+var hexbinary = require('./routes/hex-binary');
+
 
 var Datastore = require('nedb');
 var UserStore = new Datastore({ filename: 'User.db', autoload: true });
@@ -88,15 +95,21 @@ app.use(passport.session());
 
 app.use('/', index);
 app.use('/users', users);
+//app.use('/binary-denary', binarydenary);
+//app.use('/denary-binary-division', denarybinarydivision);
+//app.use('/denary-binary-subtraction', denarybinarysubtraction);
+//app.use('/binary-hex', binaryhex);
+//app.use('/hex-binary', hexbinary);
 app.use('/binary-addition', binaryaddition);
 
 app.locals.nav = [
-    {
-      title :"Binary Addition",
-      url   :"/binary-addition"
-    }
+    //{ title :"Binary to Denary", url :"/binary-denary" },
+    //{ title :"Denary to Binary ( Division )", url :"/denary-binary-division"},
+    //{ title :"Denary to Binary ( Subtraction )", url :"/denary-binary-subtraction"},
+    //{ title :"Binary to Hexadecimal", url :"/binary-hex" },
+    //{ title :"Hexadecimal to Binary", url :"/hex-binary" },
+    { title :"Binary Addition",  url :"/binary-addition" }
   ];
-
 
 app.get('/privacy',
   function(req, res){
