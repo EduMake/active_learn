@@ -14,6 +14,28 @@
     
   </head>
   <body>
+    <header>
+      <nav>
+        <ul>{{#each nav}}
+          <li><a href="{{url}}">{{title}}</a></li>
+        {{/each}}</ul>
+      </nav>
+      {{#if user }}
+        {{ user.displayName }} <a href="/logout">logout</a>
+      {{else}}
+        <a href="/login/google">Login with Google</a>
+      {{/if}}
+      <header>
+
+<h1>Binary Addition Quiz</h1>
+    <!--
+    <div id="email">
+         <label for="tincanemail">School Email Address</label> <input type="email" id="tincanemail" />
+         <button id="save">Save</button>
+    </div>-->
+</header>
+
+    </header>
     {{{body}}}
   </body>
 </html>

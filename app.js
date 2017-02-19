@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+// TODO : look at logging settings https://www.npmjs.com/package/morgan 
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
@@ -9,6 +10,8 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var binaryaddition = require('./routes/binary-addition');
 
+var Datastore = require('nedb');
+var UserStore = new Datastore({ filename: 'User.db', autoload: true });
 
 var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
@@ -44,15 +47,8 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-// Configure Passport authenticated session persistence.
-//
-// In order to restore authentication state across HTTP requests, Passport needs
-// to serialize users into and deserialize users out of the session.  In a
-// production-quality application, this would typically be as simple as
-// supplying the user ID when serializing, and querying the user record by ID
-// from the database when deserializing.  However, due to the fact that this
-// example does not have a database, the complete github profile is serialized
-// and deserialized.
+// TODO : Add school auth using https://github.com/QuePort/passport-sharepoint  
+
 passport.serializeUser(function(user, cb) {
   cb(null, user);
 });
@@ -83,10 +79,16 @@ app.use(require('express-session')({ secret: process.env.SESSIONSECRET, resave: 
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 app.use('/', index);
 app.use('/users', users);
 app.use('/binary-addition', binaryaddition);
+
+app.locals.nav = [
+    {
+      title :"Binary Addition",
+      url   :"/binary-addition"
+    }
+  ];
 
 
 app.get('/privacy',
@@ -98,6 +100,11 @@ app.get('/login',
   function(req, res){
     res.render('login');
   });
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 app.get('/login/github',
   passport.authenticate('github'));
@@ -118,9 +125,6 @@ app.get('/login/google/return',
     // Successful authentication, redirect home.
     res.redirect('/');
   });
-
-
-
 
 app.get('/profile',
   require('connect-ensure-login').ensureLoggedIn(),
@@ -146,6 +150,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
 
 module.exports = app;

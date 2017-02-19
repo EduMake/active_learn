@@ -1,18 +1,25 @@
 {
-  "name": "workspace",
-  "version": "0.0.0",
+  "name": "active_learn",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "watch": "forever --watch ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.16.0",
+    "connect-ensure-login": "^0.1.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
-    "express": "~4.14.1",
+    "express": "^4.14.1",
+    "express-session": "^1.15.1",
     "hbs": "~4.0.1",
     "less-middleware": "~2.2.0",
     "morgan": "~1.7.0",
+    "nedb": "^1.8.0",
+    "passport": "^0.3.2",
+    "passport-github": "^1.1.0",
+    "passport-google-oauth20": "^1.0.0",
     "serve-favicon": "~2.3.2"
   }
 }
