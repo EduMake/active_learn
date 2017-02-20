@@ -95,7 +95,7 @@ app.use(passport.session());
 
 app.use('/', index);
 app.use('/users', users);
-//app.use('/binary-denary', binarydenary);
+app.use('/binary-denary', binarydenary);
 //app.use('/denary-binary-division', denarybinarydivision);
 //app.use('/denary-binary-subtraction', denarybinarysubtraction);
 //app.use('/binary-hex', binaryhex);
@@ -103,7 +103,7 @@ app.use('/users', users);
 app.use('/binary-addition', binaryaddition);
 
 app.locals.nav = [
-    //{ title :"Binary to Denary", url :"/binary-denary" },
+    { title :"Binary to Denary", url :"/binary-denary" },
     //{ title :"Denary to Binary ( Division )", url :"/denary-binary-division"},
     //{ title :"Denary to Binary ( Subtraction )", url :"/denary-binary-subtraction"},
     //{ title :"Binary to Hexadecimal", url :"/binary-hex" },
