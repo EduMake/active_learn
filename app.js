@@ -37,8 +37,7 @@ passport.use(new GitHubStrategy({
   }
 ));
 
-
-var GoogleStrategy = require('passport-google-oauth20').Strategy;
+/*var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -48,11 +47,37 @@ passport.use(new GoogleStrategy({
   function(accessToken, refreshToken, profile, cb) {
     console.log(profile, cb);
     return cb(null, profile);
-    /*User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });*/
+    //User.findOrCreate({ googleId: profile.id }, function (err, user) {
+    //  return cb(err, user);
+    //});
   }
-));
+));*/
+
+var AzureAdOAuth2Strategy = require('passport-azure-ad-oauth2').Strategy;
+var jwt = require('jsonwebtoken');
+
+passport.use(new AzureAdOAuth2Strategy({
+  clientID: process.env.SUTC_CLIENT_ID,
+  clientSecret: process.env.SUTC_CLIENT_SECRET,
+  callbackURL: process.env.BASEURI+"/login/sutc/return",
+  resource: process.env.BASEURI
+  //resource: '00000002-0000-0000-c000-000000000000',
+  //tenant: 'contoso.onmicrosoft.com'
+},
+function (accessToken, refresh_token, params, profile, cb) {
+  var waadProfile = profile || jwt.decode(params.id_token, '', true);
+  console.log(waadProfile, cb);
+  return cb(null, waadProfile);
+  /*  
+  // currently we can't find a way to exchange access token by user info (see userProfile implementation), so
+  // you will need a jwt-package like https://github.com/auth0/node-jsonwebtoken to decode id_token and get waad profile
+  var waadProfile = profile || jwt.decode(params.id_token);
+
+  // this is just an example: here you would provide a model *User* with the function *findOrCreate*
+  User.findOrCreate({ id: waadProfile.upn }, function (err, user) {
+    done(err, user);
+  });*/
+}));
 
 // TODO : Add school auth using https://github.com/QuePort/passport-sharepoint  
 
@@ -135,8 +160,21 @@ app.get('/login/github/return',
     res.redirect('/');
   });
 
+app.get('/login/sutc',
+  passport.authenticate('azure_ad_oauth2'),
+  function(req, res){
+    // The request will be redirected to SharePoint for authentication, so
+    // this function will not be called.
+  });
 
-app.get('/login/google',
+app.get('/login/sutc/return', 
+  passport.authenticate('azure_ad_oauth2', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
+  
+/*app.get('/login/google',
   passport.authenticate('google', { scope: ['profile'] }));
 
 app.get('/login/google/return', 
@@ -144,7 +182,7 @@ app.get('/login/google/return',
   function(req, res) {
     // Successful authentication, redirect home.
     res.redirect('/');
-  });
+  });*/
 
 app.get('/profile',
   require('connect-ensure-login').ensureLoggedIn(),
