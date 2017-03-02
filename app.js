@@ -64,13 +64,13 @@ passport.use(new AzureAdOAuth2Strategy({
 },
 function (accessToken, refresh_token, params, profile, cb) {
   var waadProfile = jwt.decode(params.id_token, '', true);
-  console.log("accessToken", accessToken, "refresh_token", refresh_token, "params", params, "profile", profile,"waadProfile", waadProfile);
+  //console.log("accessToken", accessToken, "refresh_token", refresh_token, "params", params, "profile", profile,"waadProfile", waadProfile);
   return cb(null, waadProfile);
   /*  
   // currently we can't find a way to exchange access token by user info (see userProfile implementation), so
   // you will need a jwt-package like https://github.com/auth0/node-jsonwebtoken to decode id_token and get waad profile
   var waadProfile = profile || jwt.decode(params.id_token);
-
+  
   // this is just an example: here you would provide a model *User* with the function *findOrCreate*
   User.findOrCreate({ id: waadProfile.upn }, function (err, user) {
     done(err, user);
@@ -133,7 +133,7 @@ app.use(passport.session());
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/binary-denary', binarydenary);
+//app.use('/binary-denary', binarydenary);
 //app.use('/denary-binary-division', denarybinarydivision);
 //app.use('/denary-binary-subtraction', denarybinarysubtraction);
 //app.use('/binary-hex', binaryhex);
@@ -141,7 +141,7 @@ app.use('/binary-denary', binarydenary);
 app.use('/binary-addition', binaryaddition);
 
 app.locals.nav = [
-    { title :"Binary to Denary", url :"/binary-denary" },
+//    { title :"Binary to Denary", url :"/binary-denary" },
     //{ title :"Denary to Binary ( Division )", url :"/denary-binary-division"},
     //{ title :"Denary to Binary ( Subtraction )", url :"/denary-binary-subtraction"},
     //{ title :"Binary to Hexadecimal", url :"/binary-hex" },
