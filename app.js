@@ -60,13 +60,11 @@ passport.use(new AzureAdOAuth2Strategy({
   clientID: process.env.SUTC_CLIENT_ID,
   clientSecret: process.env.SUTC_CLIENT_SECRET,
   callbackURL: process.env.BASEURI+"/login/sutc/return",
-  resource: process.env.BASEURI
-  //resource: '00000002-0000-0000-c000-000000000000',
-  //tenant: 'contoso.onmicrosoft.com'
+  resource:process.env.SUTC_CLIENT_ID//SUTC_OBJECT_ID,
 },
 function (accessToken, refresh_token, params, profile, cb) {
-  var waadProfile = profile || jwt.decode(params.id_token, '', true);
-  console.log(waadProfile, cb);
+  var waadProfile = jwt.decode(params.id_token, '', true);
+  console.log("accessToken", accessToken, "refresh_token", refresh_token, "params", params, "profile", profile,"waadProfile", waadProfile);
   return cb(null, waadProfile);
   /*  
   // currently we can't find a way to exchange access token by user info (see userProfile implementation), so
@@ -77,6 +75,21 @@ function (accessToken, refresh_token, params, profile, cb) {
   User.findOrCreate({ id: waadProfile.upn }, function (err, user) {
     done(err, user);
   });*/
+  
+  
+  /*
+  family_name: 'Eggleton',
+  given_name: 'Martyn',
+  ipaddr: '185.24.14.206',
+  name: 'Martyn Eggleton',
+  oid: '0a61e40f-2eca-48e6-8943-18a857bf66d6',
+  onprem_sid: 'S-1-5-21-2984631940-2385209050-2166394264-1214',
+  platf: '3',
+  sub: 'dW2Zl-vDSSy4_l9oHh3g51wHYmvlx_7ETZEQlQTK1Ss',
+  tid: '155de50a-3234-46d8-8e7f-2ec17f586cb2',
+  unique_name: 'meggleton@utcsheffield.org.uk',
+  
+  */
 }));
 
 // TODO : Add school auth using https://github.com/QuePort/passport-sharepoint  
