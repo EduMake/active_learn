@@ -16,42 +16,122 @@ var denarybinarydivision = require('./routes/denary-binary-division');
 var denarybinarysubtraction = require('./routes/denary-binary-subtraction');
 var hexbinary = require('./routes/hex-binary');
 
-
-var Datastore = require('nedb');
-var UserStore = new Datastore({ filename: 'User.db', autoload: true });
-
 var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
 
-passport.use(new GitHubStrategy({
+var Sequelize = require('sequelize');
+var DB = new Sequelize('active-learn', 'edumake', 'password', {
+  host: 'localhost',
+  dialect: 'sqlite',
+
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 10000
+  },
+
+  // SQLite only
+  storage: 'database.sqlite'
+});
+
+DB
+  .authenticate()
+  .then(function(err) {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(function (err) {
+    console.log('Stopping : Unable to connect to the database:', err);
+    process.exit();
+  });
+
+var User = DB.define('user', {
+  id:{
+    type: Sequelize.INTEGER, 
+    autoIncrement: true,
+    primaryKey: true
+  },
+  login: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  },
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: Sequelize.STRING,
+    allowNull: true,
+    unique: true,
+    validate:{isEmail: true,}
+  },
+  role: {
+    type: Sequelize.STRING,
+    defaultValue: 'student',
+    allowNull: false,
+  },
+});
+
+var UserExercise = DB.define('exercise', {
+  id:{
+    type:Sequelize.INTEGER ,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  exercise: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: "uexercise"
+  },
+  email: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: "uexercise"
+  },
+  state: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+});
+
+User.sync({force: true})
+  .then(function(){
+    return User.findOrCreate({
+      where:{ 
+        login: process.env.ADMIN_EMAIL 
+      },
+      defaults: {
+        email: process.env.ADMIN_EMAIL,
+        name: process.env.ADMIN_NAME,
+        role: 'teacher'
+      }
+    })
+  })
+  .then(function(){
+    UserExercise.sync({force: true});
+  });
+  
+  
+  passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackURL: process.env.BASEURI+"/login/github/return"
   },
   function(accessToken, refreshToken, profile, cb) {
-    console.log(profile, cb);
-    return cb(null, profile);
-    /*User.findOrCreate({ githubId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });*/
+    var login = profile._json.email|| profile.username;
+    var name = profile.username || profile.username;
+    
+    User.findOrCreate({where:{ "login": login },
+      defaults: {name: name}})
+      .spread(function(user, created) {
+          cb(null, user);
+      })
+      .catch(function(err){
+        console.error('User Not Created', err);
+      });
+    
   }
 ));
-
-/*var GoogleStrategy = require('passport-google-oauth20').Strategy;
-
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.BASEURI+"/login/google/return"
-  },
-  function(accessToken, refreshToken, profile, cb) {
-    console.log(profile, cb);
-    return cb(null, profile);
-    //User.findOrCreate({ googleId: profile.id }, function (err, user) {
-    //  return cb(err, user);
-    //});
-  }
-));*/
 
 var AzureAdOAuth2Strategy = require('passport-azure-ad-oauth2').Strategy;
 var jwt = require('jsonwebtoken');
@@ -64,32 +144,18 @@ passport.use(new AzureAdOAuth2Strategy({
 },
 function (accessToken, refresh_token, params, profile, cb) {
   var waadProfile = jwt.decode(params.id_token, '', true);
-  //console.log("accessToken", accessToken, "refresh_token", refresh_token, "params", params, "profile", profile,"waadProfile", waadProfile);
-  return cb(null, waadProfile);
-  /*  
-  // currently we can't find a way to exchange access token by user info (see userProfile implementation), so
-  // you will need a jwt-package like https://github.com/auth0/node-jsonwebtoken to decode id_token and get waad profile
-  var waadProfile = profile || jwt.decode(params.id_token);
+  User.findOrCreate({where:{ login: waadProfile.upn },
+    defaults: {
+        email: waadProfile.upn ,
+        name: waadProfile.name
+      }})
+    .spread(function(user, created) {
+        cb(null, user);
+    })
+    .catch(function(err){
+      console.error('User Not Created', err);
+    });
   
-  // this is just an example: here you would provide a model *User* with the function *findOrCreate*
-  User.findOrCreate({ id: waadProfile.upn }, function (err, user) {
-    done(err, user);
-  });*/
-  
-  
-  /*
-  family_name: 'Eggleton',
-  given_name: 'Martyn',
-  ipaddr: '185.24.14.206',
-  name: 'Martyn Eggleton',
-  oid: '0a61e40f-2eca-48e6-8943-18a857bf66d6',
-  onprem_sid: 'S-1-5-21-2984631940-2385209050-2166394264-1214',
-  platf: '3',
-  sub: 'dW2Zl-vDSSy4_l9oHh3g51wHYmvlx_7ETZEQlQTK1Ss',
-  tid: '155de50a-3234-46d8-8e7f-2ec17f586cb2',
-  unique_name: 'meggleton@utcsheffield.org.uk',
-  
-  */
 }));
 
 // TODO : Add school auth using https://github.com/QuePort/passport-sharepoint  
@@ -186,16 +252,6 @@ app.get('/login/sutc/return',
     // Successful authentication, redirect home.
     res.redirect('/');
   });
-  
-/*app.get('/login/google',
-  passport.authenticate('google', { scope: ['profile'] }));
-
-app.get('/login/google/return', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/');
-  });*/
 
 app.get('/profile',
   require('connect-ensure-login').ensureLoggedIn(),
