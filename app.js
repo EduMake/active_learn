@@ -9,18 +9,18 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
-var binaryaddition = require('./routes/binary-addition');
-var binarydenary = require('./routes/binary-denary');
-var binaryhex = require('./routes/binary-hex');
-var denarybinarydivision = require('./routes/denary-binary-division');
-var denarybinarysubtraction = require('./routes/denary-binary-subtraction');
-var hexbinary = require('./routes/hex-binary');
+var binary_addition = require('./routes/binary_addition');
+var binary_denary = require('./routes/binary_denary');
+var binary_hex = require('./routes/binary_hex');
+var denary_binary_division = require('./routes/denary_binary_division');
+var denary_binary_subtraction = require('./routes/denary_binary_subtraction');
+var hex_binary = require('./routes/hex_binary');
 
 var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
 
 var Sequelize = require('sequelize');
-var DB = new Sequelize('active-learn', 'edumake', 'password', {
+var DB = new Sequelize('active_learn', 'edumake', '9d8m7k6', {
   host: 'localhost',
   dialect: 'sqlite',
 
@@ -31,7 +31,7 @@ var DB = new Sequelize('active-learn', 'edumake', 'password', {
   },
 
   // SQLite only
-  storage: 'database.sqlite'
+  storage: 'active_learn.sqlite'
 });
 
 DB
@@ -71,30 +71,46 @@ var User = DB.define('user', {
     allowNull: false,
   },
 });
+// TODO : catching user create errors inside passort to pass as 500 errors.
 
-var UserExercise = DB.define('exercise', {
+var UserExercise = DB.define('userexercise', {
   id:{
     type:Sequelize.INTEGER ,
     autoIncrement: true,
     primaryKey: true
   },
+  user_id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: 'id'
+   }
+  },
   exercise: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: "uexercise"
-  },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: "uexercise"
   },
   state: {
     type: Sequelize.STRING,
-    allowNull: false,
+    defaultValue:"{}"
+    //allowNull: false,
   },
+  currentmark:{
+    type:Sequelize.INTEGER ,
+    allowNull: true,
+    defaultValue:0
+  },
+  maxmark:{
+    type:Sequelize.INTEGER ,
+    allowNull: true,
+    defaultValue:0
+  }
 });
 
-User.sync({force: true})
+
+var bCreateWithForce = false;
+User.sync({force: bCreateWithForce})
   .then(function(){
     return User.findOrCreate({
       where:{ 
@@ -105,10 +121,10 @@ User.sync({force: true})
         name: process.env.ADMIN_NAME,
         role: 'teacher'
       }
-    })
+    });
   })
   .then(function(){
-    UserExercise.sync({force: true});
+    UserExercise.sync({force: bCreateWithForce});
   });
   
   
@@ -197,22 +213,41 @@ app.use(require('express-session')({ secret: process.env.SESSIONSECRET, resave: 
 app.use(passport.initialize());
 app.use(passport.session());
 
+var epilogue = require('epilogue');
+// Initialize epilogue
+epilogue.initialize({
+  app: app,
+  sequelize: DB
+});
+
+// Create REST resource
+var userExerciseResource = epilogue.resource({
+  model: UserExercise,
+  endpoints: ['/userexercise', '/userexercise/:id']
+});
+
+app.use(function(req, res, next){
+  res.locals.UserExercise = UserExercise;
+  next();
+});
+
+
 app.use('/', index);
 app.use('/users', users);
-//app.use('/binary-denary', binarydenary);
-//app.use('/denary-binary-division', denarybinarydivision);
-//app.use('/denary-binary-subtraction', denarybinarysubtraction);
-//app.use('/binary-hex', binaryhex);
-//app.use('/hex-binary', hexbinary);
-app.use('/binary-addition', binaryaddition);
+//app.use('/binary_denary', binary_denary);
+//app.use('/denary_binary_division', denary_binary_division);
+//app.use('/denary_binary_subtraction', denary_binary_subtraction);
+//app.use('/binary_hex', binary_hex);
+//app.use('/hex-binary', hex_binary);
+app.use('/binary_addition', binary_addition);
 
 app.locals.nav = [
-//    { title :"Binary to Denary", url :"/binary-denary" },
-    //{ title :"Denary to Binary ( Division )", url :"/denary-binary-division"},
-    //{ title :"Denary to Binary ( Subtraction )", url :"/denary-binary-subtraction"},
-    //{ title :"Binary to Hexadecimal", url :"/binary-hex" },
+//    { title :"Binary to Denary", url :"/binary_denary" },
+    //{ title :"Denary to Binary ( Division )", url :"/denary_binary_division"},
+    //{ title :"Denary to Binary ( Subtraction )", url :"/denary_binary_subtraction"},
+    //{ title :"Binary to Hexadecimal", url :"/binary_hex" },
     //{ title :"Hexadecimal to Binary", url :"/hex-binary" },
-    { title :"Binary Addition",  url :"/binary-addition" }
+    { title :"Binary Addition",  url :"/binary_addition" }
   ];
 
 app.get('/privacy',
@@ -276,6 +311,10 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+  console.error("Error: ", err);
+  
+  //console.error("Shutting Down due to: ", err);
+  //process.exit();
 });
 
 module.exports = app;

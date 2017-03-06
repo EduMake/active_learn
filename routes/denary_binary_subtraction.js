@@ -1,15 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET binary-addition page. */
+/* GET binary_addition page. */
 router.get('/', 
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res, next) {
-    res.render('binary-hex', 
+    res.render('denary_binary_subtraction', 
         {
-            //resourceloader: 'binary-hex', 
+            //resourceloader: 'binary_denary', 
             questions:true,
-            title: 'Binary to Hexadecimal Quiz',
+            title: 'Denary to Binary (Subtraction method) Quiz',
             user:req.user, 
             nav:req.app.locals.nav    
         });

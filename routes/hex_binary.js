@@ -5,11 +5,11 @@ var router = express.Router();
 router.get('/', 
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res, next) {
-    res.render('binary-addition', 
+    res.render('hex_binary', 
         {
-            resourceloader: 'binary-addition', 
+            //resourceloader: 'binary_hex', 
             questions:true,
-            title: 'Binary Addition Quiz',
+            title: 'Hexadecimal to Binary Quiz',
             user:req.user, 
             nav:req.app.locals.nav    
         });

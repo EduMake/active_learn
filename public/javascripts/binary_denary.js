@@ -48,7 +48,7 @@ $( document ).ready(function() {
             http://adlnet.gov/expapi/verbs/progressed*/
         },
         target: { //Object ???
-            id: "http://learning.edumake.org/binary-addition/",
+            id: "http://learning.edumake.org/binary_addition/",
             type: "http://adlnet.gov/expapi/activities/assessment",
             definition: {
                 name: { "en-GB": "Binary Addition Quiz" }
@@ -142,7 +142,7 @@ $( document ).ready(function() {
     };
     
     var cSumQuestion = jQuery.extend(cQuestion, {
-        type:"binaryaddition",
+        type:"binary_denary",
         oWeight: {
             xor:      1,
             carry:    10,
@@ -278,7 +278,7 @@ $( document ).ready(function() {
                 oQuizSave[sKey] = this[sKey];
             }
             var sSave = JSON.stringify(oQuizSave);
-            localStorage.setItem("quiz_binary-addition_progress", sSave);
+            localStorage.setItem("quiz_binary_denary_progress", sSave);
         },
         loadQuiz:function(oSaved) {
             var aKeys = Object.keys(oSaved);
@@ -663,7 +663,7 @@ $( document ).ready(function() {
             
             $(".quizholder").html("<h2>Thank you</h2><p>Your paper work work should have opened automatically for you to print out. If it hasn't click <a target=\"_blank\" href=\""+sURL+"\">here</a>.</p>");
             $(".explaination").hide();
-            localStorage.setItem("quiz_binary-addition_progress", "{}");
+            localStorage.setItem("quiz_binary_addition_progress", "{}");
             
             window.open(sURL,'_blank');
             //$("#dump").html(html);
@@ -703,8 +703,8 @@ $( document ).ready(function() {
     };
     
     oQuiz = Object.create(cQuiz);
-    if(localStorage.getItem("quiz_binary-addition_progress")) {
-        var quiz_progress = JSON.parse(localStorage.getItem("quiz_binary-addition_progress"));
+    if(localStorage.getItem("quiz_binary_addition_progress")) {
+        var quiz_progress = JSON.parse(localStorage.getItem("quiz_binary_addition_progress"));
         oQuiz.loadQuiz(quiz_progress);
     } 
     

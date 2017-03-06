@@ -1,3 +1,4 @@
+/*globals $ jQuery */
 var oQuiz;
 
 function logBinary(label, bin) {
@@ -28,6 +29,7 @@ $( document ).ready(function() {
     // TODO : test on the MS surfaces
     
     var tincan = false;
+    /*
     if (typeof TinCanRecordStores !== "undefined" && TinCanRecordStores.length) {
         tincan = new TinCan (
             {
@@ -43,12 +45,12 @@ $( document ).ready(function() {
         verb: {
             id: "http://adlnet.gov/expapi/verbs/initialized",
             "display": {"en-GB": "initialised"}
-            /*http://adlnet.gov/expapi/verbs/passed
-            http://adlnet.gov/expapi/verbs/failed
-            http://adlnet.gov/expapi/verbs/progressed*/
+            //http://adlnet.gov/expapi/verbs/passed
+            //http://adlnet.gov/expapi/verbs/failed
+            //http://adlnet.gov/expapi/verbs/progressed
         },
         target: { //Object ???
-            id: "http://learning.edumake.org/binary-addition/",
+            id: "http://learning.edumake.org/binary_addition/",
             type: "http://adlnet.gov/expapi/activities/assessment",
             definition: {
                 name: { "en-GB": "Binary Addition Quiz" }
@@ -64,7 +66,7 @@ $( document ).ready(function() {
     if(tincan !== false && defaultStatement.actor.mbox.length) {
         tincan.sendStatement(defaultStatement);
     }
-    
+    */
     var cQuestion = {
         iQuestion:0,
         iLine1:0,
@@ -142,7 +144,7 @@ $( document ).ready(function() {
     };
     
     var cSumQuestion = jQuery.extend(cQuestion, {
-        type:"binaryaddition",
+        type:"binary_addition",
         oWeight: {
             xor:      1,
             carry:    10,
@@ -192,7 +194,6 @@ $( document ).ready(function() {
             var x = this.iLine1;
             var y = this.iLine2;
             
-            
             var orgAnds = x & y;
             var carry = 0;
             var step = 0 ;
@@ -236,7 +237,7 @@ $( document ).ready(function() {
             var iValue = 0;
             var iExam = 0;
             
-            for (sType in this.oWeight) {
+            for (var sType in this.oWeight) {
                 iValue += this.oWeight[sType] * aAppearances[sType];
                 iExam += this.oExamMark[sType] * (aAppearances[sType]?1:0);
             }                   
@@ -277,22 +278,47 @@ $( document ).ready(function() {
                 var sKey = aKeys[i];
                 oQuizSave[sKey] = this[sKey];
             }
+            this.saveQuizData(oQuizSave);
+        },
+        saveQuizData: function(oQuizSave){
             var sSave = JSON.stringify(oQuizSave);
-            localStorage.setItem("quiz_binary-addition_progress", sSave);
+            console.log("saving", sSave);
+            $.getJSON("/binary_addition/save",{state:(JSON.stringify(oQuizSave))},function(data){
+                console.log("Saved", data);
+            });
         },
         loadQuiz:function(oSaved) {
+            console.log("loadQuiz oSaved", oSaved);
             var aKeys = Object.keys(oSaved);
             for (var i = 0; i < aKeys.length; i++) {
                 var sKey = aKeys[i];
                 this[sKey] = oSaved[sKey];
             }
             
+            this.nextQuestion();
+            this.renderQuestion();
+            
+            $(".questionnumber").html(this.iCurrentQuestion);
             $(".sumcompleted").html(this.iCurrentScore);
             $(".sumscore").html(this.iCurrentScore);
             $(".summarks").html(this.iCurrentMark+"/"+this.iMaxMark);
         },
+        loadQuizData:function(){
+            console.log("Loading");
+            $.getJSON("/binary_addition/load",{},function(data){
+                console.log("Loading data", data);
+                var quiz_progress = JSON.parse(unescape(data.state));
+                oQuiz.loadQuiz(quiz_progress); 
+            });
+            /*if(localStorage.getItem("quiz_binary_addition_progress")) {
+                var quiz_progress = JSON.parse(localStorage.getItem("quiz_binary_addition_progress"));
+                oQuiz.loadQuiz(quiz_progress);
+            }*/
+        },
         nextQuestion:function() {
-            this.saveQuiz();
+            if(this.iCurrentQuestion > 0){
+                this.saveQuiz();
+            }
             var iValue = 0;
             var iTry = 0;
             // TODO : Integrate with other question types
@@ -663,7 +689,8 @@ $( document ).ready(function() {
             
             $(".quizholder").html("<h2>Thank you</h2><p>Your paper work work should have opened automatically for you to print out. If it hasn't click <a target=\"_blank\" href=\""+sURL+"\">here</a>.</p>");
             $(".explaination").hide();
-            localStorage.setItem("quiz_binary-addition_progress", "{}");
+            this.saveQuizData("{}");
+            //localStorage.setItem("quiz_binary_addition_progress", "{}");
             
             window.open(sURL,'_blank');
             //$("#dump").html(html);
@@ -703,10 +730,7 @@ $( document ).ready(function() {
     };
     
     oQuiz = Object.create(cQuiz);
-    if(localStorage.getItem("quiz_binary-addition_progress")) {
-        var quiz_progress = JSON.parse(localStorage.getItem("quiz_binary-addition_progress"));
-        oQuiz.loadQuiz(quiz_progress);
-    } 
+    oQuiz.loadQuizData(); 
     
     oQuiz.nextQuestion();
     oQuiz.setOutput($("#questionholder"));
