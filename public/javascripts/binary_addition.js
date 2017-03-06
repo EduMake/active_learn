@@ -653,7 +653,7 @@ $( document ).ready(function() {
             var iScaledScore = Math.round((this.iCurrentMax / this.iMaxDifficulty) * 100)/ 100;
             var bSuccess = (iScaledScore > 0.50);
             var bCompletion = (this.iCurrentQuestion >= 10);
-            
+            /*
             var endStatement = defaultStatement;    
             endStatement.verb = {
                  "id": "http://adlnet.gov/expapi/verbs/completed",
@@ -675,7 +675,7 @@ $( document ).ready(function() {
             if(defaultStatement.actor.mbox.length) {
                 tincan.sendStatement(endStatement);
             }
-            
+            */
             var template = Handlebars.compile(source);
             var context = {
                     aQuestions:     this.aQuestions,
@@ -689,7 +689,10 @@ $( document ).ready(function() {
             
             $(".quizholder").html("<h2>Thank you</h2><p>Your paper work work should have opened automatically for you to print out. If it hasn't click <a target=\"_blank\" href=\""+sURL+"\">here</a>.</p>");
             $(".explaination").hide();
-            this.saveQuizData("{}");
+            
+            $.getJSON("/binary_addition/new",{},function(data){
+                console.log("New", data);
+            });
             //localStorage.setItem("quiz_binary_addition_progress", "{}");
             
             window.open(sURL,'_blank');
